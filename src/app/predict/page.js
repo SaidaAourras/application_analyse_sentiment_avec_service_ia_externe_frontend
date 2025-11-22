@@ -6,6 +6,14 @@ export default function Predict() {
   const [result, setresult] = useState();
   const [error, setError] = useState();
 
+  const sentiment = {
+    '1':'negative',
+    '2':'negative',
+    '3':'neutre',
+    '4':'positive',
+    '5':'positive'
+  }
+
   const get_predict = async (comment, token) => {
     const response = await fetch("http://127.0.0.1:8000/predict", {
       method: "POST",
@@ -84,10 +92,19 @@ export default function Predict() {
             <div className="space-y-2">
               <div className="flex items-center justify-between p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-sm">
                 <span className="text-gray-700 font-semibold text-sm">
-                  Prediction Rate :
+                   Score :
                 </span>
                 <span className="text-md font-bold text-sky-700 capitalize">
                   {result.predict_rate}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-sm">
+                <span className="text-gray-700 font-semibold text-sm">
+                   Sentiment :
+                </span>
+                <span className="text-md font-bold text-sky-700 capitalize">
+                  {sentiment[result.predict_rate]}
                 </span>
               </div>
 
