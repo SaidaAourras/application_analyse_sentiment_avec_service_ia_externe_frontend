@@ -1,39 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState();
+  const [error, setError] = useState("");
 
-  // connection avec backend
-
+  // Connexion au backend
   const post_data = async (credentials) => {
     const response = await fetch("http://127.0.0.1:8000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
     });
+
     let data;
     try {
       data = await response.json();
     } catch {
       throw new Error("Invalid JSON response");
     }
+
     if (!response.ok) {
       setError(data.detail);
-      console.error(`Response status: ${response.status}`);
+      return null;
     }
-    console.log(data);
-    localStorage.setItem(`my_token`, data.access_token);
+
+    localStorage.setItem("my_token", data.access_token);
+    return data;
   };
 
-  const submit_from = (e) => {
+  
+  // Comment Form
+  const submit_from = async (e) => {
     e.preventDefault();
-    if (username !== "" && password !== "") {
-      post_data({ username: username, password: password });
+    setError("");
+
+    if (username && password) {
+      const data = await post_data({ username, password });
+
+      if (data) {
+        router.push("/sentiment"); 
+      }
+
       setPassword("");
       setUserName("");
     }
@@ -53,18 +66,16 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={submit_from}>
-          {/* username Input avec Floating Label */}
           <div className="relative mb-6">
             <label htmlFor="username" className="ml-2 text-gray-700">
               Username
             </label>
             <input
-              type="username"
               id="username"
               value={username}
               onChange={(e) => setUserName(e.target.value)}
               required
-              className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 placeholder-transparent"
+              className="peer w-full px-4 py-2 border border-gray-300 rounded-md"
               placeholder="username"
             />
           </div>
@@ -79,29 +90,28 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500 placeholder-transparent"
+              className="peer w-full px-4 py-2 border border-gray-300 rounded-md"
               placeholder="Password"
             />
           </div>
 
           <button
             type="submit"
-            // disabled={error? True : False}
             className="w-full bg-sky-600 text-white py-2 rounded-sm font-medium hover:bg-sky-700 transition-colors"
           >
-            <Link href="/predict">Login</Link>
+            Login
           </button>
         </form>
 
         <div className="text-sm text-center mt-6">
           <p className="text-gray-600">
             Don't have an account?{" "}
-            <Link
+            <a
               href="/auth/register"
               className="text-sky-600 hover:text-sky-700 font-medium"
             >
               Register here
-            </Link>
+            </a>
           </p>
         </div>
       </div>

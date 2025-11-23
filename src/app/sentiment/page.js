@@ -5,14 +5,15 @@ export default function Predict() {
   const [comment, setComment] = useState("");
   const [result, setresult] = useState();
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const sentiment = {
-    '1':'negative',
-    '2':'negative',
-    '3':'neutre',
-    '4':'positive',
-    '5':'positive'
-  }
+    1: "negative",
+    2: "negative",
+    3: "neutre",
+    4: "positive",
+    5: "positive",
+  };
 
   const get_predict = async (comment, token) => {
     const response = await fetch("http://127.0.0.1:8000/sentiment", {
@@ -21,25 +22,36 @@ export default function Predict() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ comment }),
+      body: JSON.stringify({comment} ),
     });
+
     let data;
+
     try {
       data = await response.json();
     } catch {
       throw new Error("Invalid JSON response");
     }
+
     if (!response.ok) {
-      setError(data.detail)
-      throw new Error(`Response status: ${response.status}`);
+      throw new Error(data.detail || `Response status: ${response.status}`);
     }
-    setresult(data);
+
+    return data;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("my_token");
-    get_predict(comment, token);
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("my_token");
+      const result = await get_predict(comment, token);
+      setresult(result);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,9 +88,10 @@ export default function Predict() {
 
             <button
               type="submit"
+              disabled={loading}
               className="bg-sky-600 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-sky-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed whitespace-nowrap"
             >
-              Predict
+              {loading ? "Loading ..." : "Analyse"}
             </button>
           </div>
         </form>
@@ -92,7 +105,7 @@ export default function Predict() {
             <div className="space-y-2">
               <div className="flex items-center justify-between p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-sm">
                 <span className="text-gray-700 font-semibold text-sm">
-                   Score :
+                  Score :
                 </span>
                 <span className="text-md font-bold text-sky-700 capitalize">
                   {result.predict_rate}
@@ -101,7 +114,7 @@ export default function Predict() {
 
               <div className="flex items-center justify-between p-4 bg-gradient-to-r from-sky-50 to-blue-50 rounded-sm">
                 <span className="text-gray-700 font-semibold text-sm">
-                   Sentiment :
+                  Sentiment :
                 </span>
                 <span className="text-md font-bold text-sky-700 capitalize">
                   {sentiment[result.predict_rate]}
