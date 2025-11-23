@@ -41,7 +41,7 @@ Frontend disponible sur :
 
 ## 🖥️ Pages et Fonctionnalités
 
-/login
+#### /login
 
 - Formulaire de connexion
 
@@ -49,12 +49,10 @@ Frontend disponible sur :
 
 - Stockage du JWT dans localStorage
 
-/sentiment (protégée)
+#### /sentiment (protégée)
 
-Formulaire pour saisir le texte à analyser
-
-- Envoi au backend et 
-- affichage du résultat en temps réel
+- Formulaire pour saisir le texte à analyser
+- Envoi au backend et affichage du résultat en temps réel
 
 ## 📂 Structure du Frontend
 
