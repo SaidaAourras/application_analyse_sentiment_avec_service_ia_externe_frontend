@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🎨 Frontend – Sentiment Analysis App (Next.js)
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-First, run the development server:
+---
+
+## 🧠 Description du Frontend
+
+Application web **Next.js + React + Tailwind CSS** pour analyser le sentiment d’un texte.  
+Le frontend communique avec le backend **FastAPI** via API REST, utilise **JWT** pour l’authentification et affiche les résultats en temps réel.
+
+---
+
+## ⚙️ Installation Locale
 
 ```bash
+git clone https://github.com/SaidaAourras/application_analyse_sentiment_avec_service_ia_externe_frontend.git
+cd application_analyse_sentiment_avec_service_ia_externe_frontend
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+Frontend disponible sur :
+👉 http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🐳 Docker
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**Construire l’image**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    docker build -t sentiment-frontend .
 
-## Learn More
+**Lancer le conteneur**
 
-To learn more about Next.js, take a look at the following resources:
+    docker run -d \
+    -p 3000:3000 \
+    sentiment-frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🖥️ Pages et Fonctionnalités
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+/login
 
-## Deploy on Vercel
+- Formulaire de connexion
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Authentification via backend
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Stockage du JWT dans localStorage
+
+/sentiment (protégée)
+
+Formulaire pour saisir le texte à analyser
+
+- Envoi au backend et 
+- affichage du résultat en temps réel
+
+## 📂 Structure du Frontend
+
+    application_analyse_sentiment_avec_service_ia_externe_frontend/
+    ├── src/
+    │   ├── app/
+    │   │   ├── auth/                # Authentification
+    │   │   │   ├── login/           # Page login
+    │   │   │   │   └── page.js
+    │   │   │   └── register/        # Page register
+    │   │   │       └── page.js
+    │   │   └── sentiment/           # Page sentiment
+    │   │       └── page.js
+    │   │
+    │   ├── layout.js
+    │   └── page.js
+    │
+    ├── Dockerfile
+    ├── package.json
+    └── README.md
+
+
+## 🛠️ Technologies
+
+- Next.js 16.0.3
+
+- React 19.2.0
+
+- TypeScript
+
+- Tailwind CSS
+
+- Docker pour conteneurisation
+
+## 📝 Commandes Utiles
+
+    npm run dev      # Développement
+    npm run build    # Build production
+    npm start        # Démarrer production
+
+
+## 🌐 Accès
+- Développement : http://localhost:3000
+
+- Production : selon configuration du serveur ou Docker
+
+---
+
+## 👩‍💻 **AOURRAS Saida**
