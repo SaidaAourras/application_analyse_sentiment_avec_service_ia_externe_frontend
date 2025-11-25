@@ -1,7 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Predict() {
+  const router = useRouter();
+
   const [comment, setComment] = useState("");
   const [result, setresult] = useState();
   const [error, setError] = useState();
@@ -15,6 +18,14 @@ export default function Predict() {
     5: "positive",
   };
 
+  // Vérification du token au chargement
+  useEffect(() => {
+    const token = localStorage.getItem("my_token");
+    if (!token) {
+      router.push("/auth/login");
+    }
+  }, [router]);
+
   const get_predict = async (comment, token) => {
     const response = await fetch("http://127.0.0.1:8000/sentiment", {
       method: "POST",
@@ -22,7 +33,7 @@ export default function Predict() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({comment} ),
+      body: JSON.stringify({ comment }),
     });
 
     let data;
@@ -43,10 +54,19 @@ export default function Predict() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const token = localStorage.getItem("my_token");
+
+      if (!token) {
+        setLoading(false);
+        router.push("/auth/login");
+        return;
+      }
+
       const result = await get_predict(comment, token);
       setresult(result);
+      setError(null);
     } catch (err) {
       setError(err.message);
     } finally {
