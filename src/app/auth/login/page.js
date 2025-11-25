@@ -50,7 +50,6 @@ export default function LoginPage() {
     try {
       if (username && password) {
         const data = await post_data({ username, password });
-
         if (data) {
           router.push("/sentiment");
         }
